@@ -4,53 +4,172 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
-
+var db = require('./db.js');
 var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
-var pool = mysql.createPool({
-    connectionLimit : 100, //important
-    host     : 'localhost',
-    user     : 'root',
-    password : 'gPPZu6XzNOiQU957PGBh',
-    debug    :  false
+/**
+ * Module dependencies.
+ */
+
+var debug = require('debug')('pixelbypixel:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+var io = require('socket.io').listen(server.listen(port));
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+}
+
+db.connect(function(){return;});
+io.sockets.on('connection', function(socket) {
+
+
+    socket.on('color', function(data){
+        // TODO: Escape data
+        var queryString = 'INSERT INTO mydb.pxbypx VALUES' + data.coords + ',' + data.color + ',' + data.fbID + ',' + dateTime();
+        db.get().query(queryString, function(err) {
+            if (err)
+                throw err; // TODO catch error
+            else
+                console.log('Paint Successful');
+        })
+    });
+
+    socket.on('facebookIDcheck', function(facebookID) {
+        var fbID = db.get().escape(facebookID);
+        var queryString = 'SELECT * FROM mydb.pxbypx WHERE coordinates = ' + fbID;
+        db.get().query(queryString, function(err, results){
+            if (err)
+                throw err; // TODO Write proper error handling
+            else
+                socket.emit('reportUserCoords', results);   // TODO: Write HANDLER for checking FB ID
+        })
+    });
+
+    socket.on('getCoords', function(x, y){
+        var coords = db.get().escape(x + ',' + y);
+        var queryString = 'SELECT coordinates FROM mydb.pxbypx WHERE coordinates = ' + coords;
+        db.get().query(queryString, function(err, results){
+            if (err)
+                throw err;
+            else
+                socket.emit('reportCoords', results);
+        })
+    });
+
+    socket.on('grabEntry', function(x, y){
+        var coords = db.get().escape(x + ',' + y);
+        var queryString = 'SELECT * FROM mydb.pxbypx WHERE coordinates = ' + coords;
+        db.get().query(queryString, function(err, results) {
+            if (err)
+                throw err;
+            else {
+                socket.emit('reportEntry', results);
+                //socket.on('reportEntry', function(results){
+                //    // TODO: modify reportEntry to form JSON data
+                //    messages.push(results[0].facebookID);
+                //    messages.push(results[0].coordinates);
+                //    messages.push(results[0].claimDate);
+                //    messages.push(results[0].color);
+                //
+                //    var html = '';
+                //    for(var i=0; i<messages.length; i++) {
+                //        html += messages[i] + '<br />';
+                //    }
+                //    content.innerHTML = html;
+                //});
+            }
+        })
+    });
+
+
 });
 
-//function handle_database(req,res) {
-//
-//    pool.getConnection(function(err,connection){
-//        if (err) {
-//        connection.release();
-//        res.json({"code" : 100, "status" : "Error in connection database"});
-//        return;
-//        }
-//
-//        console.log('connected as id ' + connection.threadId);
-//
-//        connection.query("select * from mydb.pxbypx",function(err,rows){
-//        connection.release();
-//        if(!err) {
-//            res.json(rows);
-//        }
-//        });
-//
-//        connection.on('error', function(err) {
-//        res.json({"code" : 100, "status" : "Error in connection database"});
-//        return;
-//        });
-//    });
-//}
-
-//app.get("/",function(req,res){-
-//    handle_database(req,res);
-//});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.engine('jade', require('jade').__express);
+
+app.get("/", function(req, res){
+    res.render("page");
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -60,8 +179,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req,res,next){
+    req.db = pool;
+    next();
+});
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
