@@ -6,9 +6,9 @@ block content
     p#footer (C) 2015 Pixel By Pixel --
         a#about(href="http://google.com") About
     script(src='javascripts/CellInterface.js')
-    script(src='jacascripts/cell.js')
+    script(src='javascripts/cell.js')
     script.
-        popup({color: "#000000", facebookId: "aodsasd9125r", x: 4, y: 10, date: "1/1/15"});
+        popup({/*TODO cell object*/color: "#000000", facebookId: "", x: 4, y: 10, date: "1/1/15"});
         pool.getConnection(function (err, connection) {
             if (err) {
                 connection.release();
