@@ -4,11 +4,49 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mysql = require('mysql');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+var pool = mysql.createPool({
+    connectionLimit : 100, //important
+    host     : 'localhost',
+    user     : 'root',
+    password : 'gPPZu6XzNOiQU957PGBh',
+    debug    :  false
+});
+
+//function handle_database(req,res) {
+//
+//    pool.getConnection(function(err,connection){
+//        if (err) {
+//        connection.release();
+//        res.json({"code" : 100, "status" : "Error in connection database"});
+//        return;
+//        }
+//
+//        console.log('connected as id ' + connection.threadId);
+//
+//        connection.query("select * from mydb.pxbypx",function(err,rows){
+//        connection.release();
+//        if(!err) {
+//            res.json(rows);
+//        }
+//        });
+//
+//        connection.on('error', function(err) {
+//        res.json({"code" : 100, "status" : "Error in connection database"});
+//        return;
+//        });
+//    });
+//}
+
+//app.get("/",function(req,res){-
+//    handle_database(req,res);
+//});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
