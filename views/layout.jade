@@ -1,7 +1,10 @@
 doctype html
 html
   head
-    title= "Pixel By Pixel"
+    title= 'Pixel By Pixel'
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    script(src= 'http://code.jquery.com/jquery-1.7.1.min.js')
+    script(src= 'http://file.urin.take-uma.net/jquery.balloon.js')
+    script(src= '/javascripts/CellInterface.js')
+  body(id= 'body')
     block content

@@ -1,47 +1,47 @@
 /**
  * Created by jon55_000 on 11/14/2015.
  */
-
-function isUserInDatabase(userId) {
-    /*
-     Find userId in database
-     if userId === "" return false
-     if !userId return false
-     if userId return true
-     */
-    if (userId === "") {
-
-    }
-    return false;
+function main() {
+    alert("Hi");
 }
 
-function isPixelInDatabase(x, y) {
+function findFacebookUser() {
+    /*
+     Communicate with Facebook to find the user's ID
+     */
+    return "asdoi1245";
+}
+
+function userHasPaintedPixel(user) {
+    /*
+     Search the database for user
+     if user is in the database return true
+     */
+    return true;
+}
+
+function isPixelInDatabase(xCoord, yCoord) {
     /*
      Find coordinates in database
      if !coordinates do nothing
      if coordinates do parse coordinates
      */
-    if (x == -1 && y == -1) {
-
+    var b = false;
+    if (xCoord != null && yCoord != null) {
+        b = true;
     }
-    return false;
+    return b;
 }
 
-function popup(facebookId, coordinates) {
-    var userHasAddedPixel = isUserInDatabase(facebookId);
-    var coordArray = coordinates.split(", ");
-
-    var xCoord = parseInt(coordArray[0]);
-    var yCoord = parseInt(coordArray[1]);
-    var pixelIsFilled = isPixelInDatabase(xCoord, yCoord);
+function popup(cell) {
+    var pixelIsFilled = cell.facebookId !== "";
+    var user = findFacebookUser();
+    var userHasAddedPixel = userHasPaintedPixel(user);
 
     alert("You are opening the interface");
-    var mainDivision = document.createAttribute("div");
-    div.setAttribute("id", "Cell Interface");
-    div.setAttribute("align", "center");
-    var paragraph1 = document.createAttribute("p");
-    var textNode;
 
+    var cellElement = document.getElementById(cell.x + ", " + cell.y); //TODO possible bug
+    var dataOnCell;
     if (pixelIsFilled) {
         /*
             Display data about the pixel:
@@ -49,8 +49,10 @@ function popup(facebookId, coordinates) {
                 Color
                 When it was added
          */
+        dataOnCell = "<h1>Cell painted by " + cell.facebookId + "</h1><p>Location: " + cell.x + ", " + cell.y + " </p>" +
+            "<p>Color: " + cell.color + "</p><p>Date added: " + cell.date + " </p>";
     } else {
-        if (facebookId === "") {
+        if (cell.facebookId === "") {
             /*
                 Tell user to log in
              */
@@ -61,9 +63,34 @@ function popup(facebookId, coordinates) {
                  */
             } else {
                 /*
-                 Display the paint interface
+                    Display the paint interface
                  */
             }
         }
     }
+
+    alert(dataOnCell);
+
+    var elementToAddTo = document.getElementById("body");
+    var paragraph = document.createElement("p");
+    paragraph.setAttribute("id", "elementToClick")
+    var textNode = document.createTextNode("Hi thar");
+    paragraph.appendChild(textNode);
+    elementToAddTo.appendChild(paragraph);
+
+    $(document).ready(function() {
+        var shown = true;
+        $("#elementToClick").click(function() { //TODO possible bug
+            shown = true;
+            if (shown) {
+                $(this).showBalloon({ contents: dataOnCell, position: "top"});
+            } else {
+                $(this).hideBalloon();
+            }
+        });
+    });
+}
+
+function removeBubble() {
+
 }
