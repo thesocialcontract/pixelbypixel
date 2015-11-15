@@ -38,9 +38,8 @@ function popup(cell) {
     var user = findFacebookUser();
     var userHasAddedPixel = userHasPaintedPixel(user);
 
-    alert("You are opening the interface");
+    //alert("You are opening the interface");
 
-    var cellElement = document.getElementById(cell.x + ", " + cell.y); //TODO possible bug
     var dataOnCell;
     if (pixelIsFilled) {
         /*
@@ -50,7 +49,7 @@ function popup(cell) {
                 When it was added
          */
         dataOnCell = "<h1>Cell painted by " + cell.facebookId + "</h1><p>Location: " + cell.x + ", " + cell.y + " </p>" +
-            "<p>Color: " + cell.color + "</p><p>Date added: " + cell.date + " </p>";
+            "<p>Color: " + cell.color + "</p><p>Date added: " + cell.date + " </p><button onclick='removeBubble()'>Get rid of this</button>";
     } else {
         if (cell.facebookId === "") {
             /*
@@ -69,18 +68,21 @@ function popup(cell) {
         }
     }
 
-    alert(dataOnCell);
+    //alert(dataOnCell);
 
-    var elementToAddTo = document.getElementById("body");
+    /*var elementToAddTo = document.getElementById("body");
     var paragraph = document.createElement("p");
     paragraph.setAttribute("id", "elementToClick")
     var textNode = document.createTextNode("Hi thar");
     paragraph.appendChild(textNode);
-    elementToAddTo.appendChild(paragraph);
+    elementToAddTo.appendChild(paragraph);*/
+
+    var cellElement = document.getElementById(cell.x + ", " + cell.y); //TODO possible bug
 
     $(document).ready(function() {
+        $.balloon.defaults.minLifetime = 0;
         var shown = true;
-        $("#elementToClick").click(function() { //TODO possible bug
+        $(cellElement).click(function() { //TODO possible bug
             shown = true;
             if (shown) {
                 $(this).showBalloon({ contents: dataOnCell, position: "top"});
@@ -92,5 +94,5 @@ function popup(cell) {
 }
 
 function removeBubble() {
-
+    $("#elementToClick").hideBalloon();
 }
