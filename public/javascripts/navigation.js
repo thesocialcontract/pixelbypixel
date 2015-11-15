@@ -1,7 +1,7 @@
 /**
  * Created by Caleb on 11/14/2015.
  */
-
+var db = require('./db.js');
 // On click and drag
 function onClick() {
 
@@ -63,35 +63,13 @@ function renderMap(x, y, lenX, lenY) {
     for (i = 0; i < lenX; i++) {
         for (k = 0; k < lenY; k++) {
             // Talk to DB at coords (i, k)
+
+            var str = db.get().query('select * from mydb.pxbypx');
+            console.log(str);
             // if person drawed
                 // draw SVG color
             // else
                 // draw svg BLANK
         }
     }
-}
-
-function handle_database(req,res) {
-
-    pool.getConnection(function(err,connection){
-        if (err) {
-            connection.release();
-            res.json({"code" : 100, "status" : "Error in connection database"});
-            return;
-        }
-
-        console.log('connected as id ' + connection.threadId);
-
-        connection.query("select * from mydb.pxbypx",function(err,rows){
-            connection.release();
-            if(!err) {
-                // TODO: DO STUFF
-            }
-        });
-
-        connection.on('error', function(err) {
-            res.json({"code" : 100, "status" : "Error in connection database"});
-            return;
-        });
-    });
 }
