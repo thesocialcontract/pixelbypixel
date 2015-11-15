@@ -12,14 +12,15 @@ block content
     script(src= '/javascripts/Facebook.js')
     script(src= '/javascripts/navigation.js')
     script(src= '/javascripts/CellInterface.js')
-    script(src= 'javascripts/CellInterface.js')
     script(src= 'javascripts/cell.js')
 
+
     #status
+    #drawing
     script.
         devAuthorize();
         main();
-        onClick();
+        //onClick();
         popup({/*TODO cell object*/color: "#000000", facebookId: "", x: 4, y: 10, date: "1/1/15"});
         pool.getConnection(function (err, connection) {
             if (err) {

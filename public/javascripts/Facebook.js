@@ -1,9 +1,6 @@
 /**
  * Created by jon55_000 on 11/15/2015.
  */
-/**
- * Created by jon55_000 on 11/15/2015.
- */
 function devAuthorize() {
     window.fbAsyncInit = function () {
         FB.init({

@@ -32,9 +32,10 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+
 var io = require('socket.io').listen(server.listen(port));
-server.on('error', onError);
 server.on('listening', onListening);
+server.on('error', onError);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -168,7 +169,7 @@ app.set('view engine', 'jade');
 app.engine('jade', require('jade').__express);
 
 app.get("/", function(req, res){
-    res.render("page");
+    res.render("index");
 });
 
 // uncomment after placing your favicon in /public

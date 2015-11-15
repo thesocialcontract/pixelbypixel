@@ -1,11 +1,12 @@
 /**
  * Created by Caleb on 11/14/2015.
  */
-var db = require('./db.js');
+//var db = require('./db.js');
 // On click and drag
 var x = 0;
 var y = 0;
-var zoomFactor = 1;
+var socket = io();
+var socketResult;
 function onClick() {
 
     // TODO: Write event handlers
@@ -61,7 +62,15 @@ function onClickZoomOut() {
     // change cell size
 }
 
-
+// TODO: Write DB access
+//var isColored = false;
+//socket.on('reportEntry', function(results){
+//    if (results.empty)
+//        is.Colored = false;
+//    else
+//        is.Colored = true;
+//
+//});
 /* --------------------------------------------------------------------------
 *   Viewing window starting from coords (x,y) with the zoomLevel
 *
@@ -74,13 +83,21 @@ function renderMap(x, y, lenX, lenY) {
     for (i = 0; i < lenX; i++) {
         for (k = 0; k < lenY; k++) {
             // Talk to DB at coords (i, k)
-
-            var str = db.get().query('select * from mydb.pxbypx');
-            console.log(str);
-            // if person drawed
-                // draw SVG color
-            // else
-                // draw svg BLANK
+            //socket.emit('grabEntry', x+i, y-k);
+            //var str = db.get().query('select * from mydb.pxbypx');
+            //if (str has facebookID)
+            //    draw color
+            //else
+            {
+                /* create an svg drawing */
+                var draw = SVG('drawing');
+                var rect = draw.rect(50,50).fill('#eae1cc');
+                draw.line(0,0,50,0).stroke({ color: '#c2a96d', width: 2 });
+                draw.line(0,0,0,50).stroke({ color: '#c2a96d', width: 2 });
+                draw.line(50,50,0,50).stroke({ color: '#c2a96d', width: 1 });
+                draw.line(50,50,50,0).stroke({ color: '#c2a96d', width: 1 });
+                draw.line(0,50,50,0).stroke({ color: '#c2a96d', width: 2 });
+            }
         }
     }
 }

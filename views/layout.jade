@@ -6,5 +6,9 @@ html
       fb:login-button(id='facebookButton',scope='public_profile,email', onlogin='checkLoginState();')
       | <br><br>
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="/socket.io/socket.io.js")
+    script(src="/javascripts/svg.js")
+    script.
+      var socket = io();
   body(id= 'body')
     block content

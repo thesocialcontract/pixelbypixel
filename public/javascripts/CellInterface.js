@@ -1,6 +1,8 @@
 /**
  * Created by jon55_000 on 11/14/2015.
  */
+var socket = io();
+var cellElement;
 function findFacebookUser() {
     /*
      Communicate with Facebook to find the user's ID
@@ -53,12 +55,17 @@ function findFacebookUser() {
     console.log('Welcome!  Fetching your information.... ');
 }
 
+var userCoords = '';
+
+socket.on('reportUserCoords', function(results){
+    if (results.size > 0)
+    userCoords = results[0].coordinates;
+});
+
 function userHasPaintedPixel(user) {
-    /*
-     Search the database for user
-     if user is in the database return true
-     */
-    return false;
+    socket.emit('facebookIDcheck');
+
+    return userCoords != '';
 }
 
 function popup(cell) {
@@ -121,7 +128,7 @@ function popup(cell) {
     paragraph.appendChild(textNode);
     elementToAddTo.appendChild(paragraph);*/
 
-    var cellElement = document.getElementById(cell.x + ", " + cell.y); //TODO possible bug
+    cellElement = document.getElementById(cell.x + ", " + cell.y); //TODO possible bug
 
     $(document).ready(function() {
         $.balloon.defaults.minLifetime = 0;
@@ -164,9 +171,13 @@ function popup(cell) {
 }
 
 function removeBubble() {
-    $("#elementToClick").hideBalloon();
+    //$("#elementToClick").hideBalloon();
+    $("cellElement").hideBalloon();
 }
 
 function paintPixel() {
-
+    // if coords not filled
+    //  paint
+    // else
+    // throw error
 }

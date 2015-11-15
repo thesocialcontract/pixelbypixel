@@ -25,10 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="af33916d-030e-44da-8140-41755d059e15">
-        <schema name="mydb" object-types="column, constraint, function, index, procedure, table, trigger, view" />
-        <schema name="mysql" object-types="function, procedure, table, view" />
-        <schema name="pxbypx" object-types="column, constraint, function, index, procedure, table, trigger, view" />
-        <schema name="sakila" object-types="function, procedure, table, view" />
+        <schema name="mydb" object-types="table" />
       </connection>
     </loaded-nodes>
   </component>
