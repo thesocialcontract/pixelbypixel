@@ -1,5 +1,33 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    #fbLogIn
+    canvas#canvas
+    p#footer (C) 2015 Pixel By Pixel --
+        a#about(href="http://google.com") About
+    script(src='jacascripts/cell.js')
+    script(src='javascripts/CellInterface.js')
+    script.
+        pool.getConnection(function (err, connection) {
+            if (err) {
+                connection.release();
+                res.json({"code": 100, "status": "Error in connection database"});
+                return;
+            }
+
+            console.log('connected as id ' + connection.threadId);
+
+            connection.query("select * from mydb.pxbypx", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var pline = document.createElement("p");
+                    pline.appendChild('LOL')
+                    document.body.appendChild(pline);
+                }
+            });
+
+            connection.on('error', function (err) {
+                res.json({"code": 100, "status": "Error in connection database"});
+                return;
+            });
+        });
