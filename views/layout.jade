@@ -1,15 +1,10 @@
 doctype html
 html
   head
-    title= "Pixel By Pixel"
+    title= 'Pixel By Pixel'
+    div(align= 'right')
+      fb:login-button(id='facebookButton',scope='public_profile,email', onlogin='checkLoginState();')
+      | <br><br>
     link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='/socket.io/socket.io.js/')
-    script(src= 'http://code.jquery.com/jquery-1.7.1.min.js')
-    script(src= 'http://file.urin.take-uma.net/jquery.balloon.js')
-    script(src= 'javascripts/spectrum.js')
-    link(rel='stylesheet', href= '/stylesheets/spectrum.css')
-    script(src= '/javascripts/CellInterface.js')
-    script.
-        var socket = io();
   body(id= 'body')
     block content
