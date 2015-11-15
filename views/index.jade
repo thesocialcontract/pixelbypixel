@@ -5,9 +5,10 @@ block content
     canvas#canvas
     p#footer (C) 2015 Pixel By Pixel --
         a#about(href="http://google.com") About
-    script(src='jacascripts/cell.js')
     script(src='javascripts/CellInterface.js')
+    script(src='javascripts/cell.js')
     script.
+        popup({/*TODO cell object*/color: "#000000", facebookId: "", x: 4, y: 10, date: "1/1/15"});
         pool.getConnection(function (err, connection) {
             if (err) {
                 connection.release();
